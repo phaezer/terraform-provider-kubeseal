@@ -10,6 +10,9 @@ default: build
 build:
 	go build -o ${BINARY}
 
+generate:
+	cd tools; go generate ./...
+
 install: build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	cp ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}/
@@ -26,4 +29,4 @@ fmt:
 lint:
 	golangci-lint run ./...
 
-.PHONY: default build install test testacc fmt lint
+.PHONY: default build install test testacc fmt lint generate
