@@ -11,7 +11,7 @@ permissions:
 jobs:
   release:
     name: Release
-    uses: hashicorp/ghaction-terraform-provider-release/.github/workflows/community.yml@v4
+    uses: hashicorp/ghaction-terraform-provider-release/.github/workflows/community.yml@v5
     secrets:
       gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
       gpg-private-key-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
