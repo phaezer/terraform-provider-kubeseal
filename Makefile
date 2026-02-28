@@ -1,27 +1,19 @@
-HOSTNAME=registry.terraform.io
-NAMESPACE=phaezer
-NAME=kubeseal
-BINARY=terraform-provider-${NAME}
-VERSION=0.1.0
-OS_ARCH=$(shell go env GOOS)_$(shell go env GOARCH)
-
-default: build
+default: fmt lint install generate
 
 build:
-	go build -o ${BINARY}
+	go build -v ./...
 
 generate:
 	cd tools; go generate ./...
 
 install: build
-	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
-	cp ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}/
+	go install -v ./...
 
 test:
-	go test ./... -v
+	go test -v -cover -timeout=120s -parallel=10 ./...
 
 testacc:
-	TF_ACC=1 go test ./... -v -timeout 120m
+	TF_ACC=1 go test -v -cover -timeout 120m ./...
 
 fmt:
 	go fmt ./...
