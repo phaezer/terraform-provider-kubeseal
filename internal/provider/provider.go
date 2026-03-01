@@ -5,14 +5,14 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/phaezer/terraform-provider-kubeseal/internal/datasources/certificate"
-	"github.com/phaezer/terraform-provider-kubeseal/internal/resources/sealed_secret"
-	ktypes "github.com/phaezer/terraform-provider-kubeseal/internal/types"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/phaezer/terraform-provider-kubeseal/internal/datasources/certificate"
+	"github.com/phaezer/terraform-provider-kubeseal/internal/resources/sealed_secret"
+	ktypes "github.com/phaezer/terraform-provider-kubeseal/internal/types"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )

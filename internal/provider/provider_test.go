@@ -30,7 +30,7 @@ func TestBuildRestConfig_ExplicitFields(t *testing.T) {
 	if cfg.BearerToken != "my-token" {
 		t.Errorf("BearerToken = %q, want %q", cfg.BearerToken, "my-token")
 	}
-	if !cfg.TLSClientConfig.Insecure {
+	if !cfg.Insecure {
 		t.Error("Insecure should be true")
 	}
 }
@@ -52,14 +52,14 @@ func TestBuildRestConfig_ExplicitWithCerts(t *testing.T) {
 		t.Fatalf("buildRestConfig failed: %v", err)
 	}
 
-	if string(cfg.TLSClientConfig.CertData) != "cert-data" {
-		t.Errorf("CertData = %q, want %q", cfg.TLSClientConfig.CertData, "cert-data")
+	if string(cfg.CertData) != "cert-data" {
+		t.Errorf("CertData = %q, want %q", cfg.CertData, "cert-data")
 	}
-	if string(cfg.TLSClientConfig.KeyData) != "key-data" {
-		t.Errorf("KeyData = %q, want %q", cfg.TLSClientConfig.KeyData, "key-data")
+	if string(cfg.KeyData) != "key-data" {
+		t.Errorf("KeyData = %q, want %q", cfg.KeyData, "key-data")
 	}
-	if string(cfg.TLSClientConfig.CAData) != "ca-data" {
-		t.Errorf("CAData = %q, want %q", cfg.TLSClientConfig.CAData, "ca-data")
+	if string(cfg.CAData) != "ca-data" {
+		t.Errorf("CAData = %q, want %q", cfg.CAData, "ca-data")
 	}
 }
 

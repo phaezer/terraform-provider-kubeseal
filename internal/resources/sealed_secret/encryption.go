@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"io"
 	"sort"
 	"strings"
 
@@ -22,7 +21,9 @@ import (
 )
 
 func init() {
-	_ = ssv1alpha1.AddToScheme(scheme.Scheme)
+	if err := ssv1alpha1.AddToScheme(scheme.Scheme); err != nil {
+		panic(fmt.Sprintf("failed to add SealedSecrets scheme: %v", err))
+	}
 }
 
 // fetchCertificate retrieves the sealing certificate from the sealed-secrets controller
@@ -165,33 +166,4 @@ func secretDataHash(data map[string]string) string {
 	}
 	h := sha256.Sum256(buf.Bytes())
 	return fmt.Sprintf("%x", h)
-}
-
-// readCertificatePEM fetches the raw PEM certificate bytes from the controller.
-func readCertificatePEM(ctx context.Context, restConfig *rest.Config, namespace, name string) ([]byte, error) {
-	cfg := rest.CopyConfig(restConfig)
-	cfg.AcceptContentTypes = "application/x-pem-file, */*"
-
-	client, err := corev1client.NewForConfig(cfg)
-	if err != nil {
-		return nil, fmt.Errorf("creating Kubernetes client: %w", err)
-	}
-
-	svc, err := client.Services(namespace).Get(ctx, name, metav1.GetOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("getting sealed-secrets service %s/%s: %w", namespace, name, err)
-	}
-
-	if len(svc.Spec.Ports) == 0 {
-		return nil, fmt.Errorf("service %s/%s has no ports", namespace, name)
-	}
-	portName := svc.Spec.Ports[0].Name
-
-	certStream, err := client.Services(namespace).ProxyGet("http", name, portName, "/v1/cert.pem", nil).Stream(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("fetching certificate from controller: %w", err)
-	}
-	defer certStream.Close()
-
-	return io.ReadAll(certStream)
 }

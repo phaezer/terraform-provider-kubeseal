@@ -11,21 +11,6 @@ import (
 	sscrypto "github.com/bitnami-labs/sealed-secrets/pkg/crypto"
 )
 
-func generateTestKey(t *testing.T) *testKey {
-	t.Helper()
-	privKey, cert, err := sscrypto.GeneratePrivateKeyAndCert(2048, 24*time.Hour, "test")
-	if err != nil {
-		t.Fatalf("failed to generate test key: %v", err)
-	}
-	return &testKey{privKey: privKey, cert: cert, pubKey: &privKey.PublicKey}
-}
-
-type testKey struct {
-	privKey interface{}
-	cert    interface{}
-	pubKey  interface{ Size() int }
-}
-
 func TestParseScopeString(t *testing.T) {
 	tests := []struct {
 		input    string

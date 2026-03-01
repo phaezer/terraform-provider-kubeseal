@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 
-	ktypes "github.com/phaezer/terraform-provider-kubeseal/internal/types"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	ktypes "github.com/phaezer/terraform-provider-kubeseal/internal/types"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
 )

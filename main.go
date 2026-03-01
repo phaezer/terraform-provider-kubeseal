@@ -5,8 +5,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/phaezer/terraform-provider-kubeseal/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
+	"github.com/phaezer/terraform-provider-kubeseal/internal/provider"
 )
 
 var version = "dev"
