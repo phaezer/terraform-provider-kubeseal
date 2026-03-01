@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	ktypes "github.com/phaezer/terraform-provider-kubeseal/internal/types"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -14,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	ktypes "github.com/phaezer/terraform-provider-kubeseal/internal/types"
 )
 
 var _ resource.Resource = &SealedSecretResource{}
@@ -193,26 +193,18 @@ func (r *SealedSecretResource) encryptAndSetState(ctx context.Context, model *Se
 	scope := parseScopeString(model.Scope.ValueString())
 
 	secretDataMap := make(map[string]string)
-	if !model.SecretData.IsNull() {
-		for k, v := range model.SecretData.Elements() {
-			secretDataMap[k] = v.(types.String).ValueString()
-		}
-	}
+	diagnostics.Append(model.SecretData.ElementsAs(ctx, &secretDataMap, false)...)
 
 	var labelsMap map[string]string
 	if !model.Labels.IsNull() && !model.Labels.IsUnknown() {
 		labelsMap = make(map[string]string)
-		for k, v := range model.Labels.Elements() {
-			labelsMap[k] = v.(types.String).ValueString()
-		}
+		diagnostics.Append(model.Labels.ElementsAs(ctx, &labelsMap, false)...)
 	}
 
 	var annotationsMap map[string]string
 	if !model.Annotations.IsNull() && !model.Annotations.IsUnknown() {
 		annotationsMap = make(map[string]string)
-		for k, v := range model.Annotations.Elements() {
-			annotationsMap[k] = v.(types.String).ValueString()
-		}
+		diagnostics.Append(model.Annotations.ElementsAs(ctx, &annotationsMap, false)...)
 	}
 
 	pubKey, err := fetchCertificate(ctx, r.providerData.RestConfig, r.providerData.ControllerNamespace, r.providerData.ControllerName)
